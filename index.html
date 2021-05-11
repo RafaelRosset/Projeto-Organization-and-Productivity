@@ -13,7 +13,7 @@
   <!-- CSS Customizado -->
   <link rel="stylesheet" href="./assets/css/style.css">
 
-  <!-- Lib jQuery -->
+  <!-- Libs JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
@@ -24,6 +24,7 @@
     integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://kit.fontawesome.com/e693c56b3c.js" crossorigin="anonymous"></script>
 
 </head>
 
@@ -85,11 +86,11 @@
             <div class="input-group">
 
               <div class="input-group-prepend"><span class="input-group-text"
-                  style="background-color: #6c757d; color: white;">Foco:</span></div>
+                  style="background-color: gray; color: white;">Foco:</span></div>
 
               <input id="foco" class="form-control px-1" type="text" placeholder="Tempo em minutos">
               <div class="input-group-apend"><span class="input-group-text"
-                  style="background-color: #6c757d; color: white;">minutos</span></div>
+                  style="background-color: gray; color: white;">minutos</span></div>
 
             </div>
 
@@ -100,12 +101,12 @@
             <div class="input-group">
 
               <div class="input-group-prepend"><span class="input-group-text"
-                  style="background-color: #6c757d; color: white;">Pausa:</span></div>
+                  style="background-color: gray; color: white;">Pausa:</span></div>
 
               <input id="pausa" class="form-control px-1" type="text" placeholder="Tempo em minutos">
 
               <div class="input-group-apend"><span class="input-group-text"
-                  style="background-color: #6c757d; color: white;">minutos</span></div>
+                  style="background-color: gray; color: white;">minutos</span></div>
 
             </div>
 
@@ -116,12 +117,12 @@
             <div class="input-group">
 
               <div class="input-group-prepend"><span class="input-group-text"
-                  style="background-color: #6c757d; color: white;">Descanso:</span></div>
+                  style="background-color: gray; color: white;">Descanso:</span></div>
 
               <input id="descanso" class="form-control px-1" type="text" placeholder="Tempo em minutos">
 
               <div class="input-group-apend"><span class="input-group-text"
-                  style="background-color: #6c757d; color: white;">minutos</span></div>
+                  style="background-color: gray; color: white;">minutos</span></div>
 
               <small style="font-size: 0.5em;"><i>Padrão Original: 25m Foco, 5m Pausa, 15m descanso.</i></small>
 
@@ -133,10 +134,10 @@
 
           <div class="input-group d-block" style="margin-left: auto; margin-right: auto;">
 
-            <button id="enviarTempos" style="width: 47%;" type="submit" class="btn btn-primary btn-md">Enviar</button>
+            <button id="enviarTempos" style="width: 47%;" type="submit" class="btn btn-dark btn-md">Enviar</button>
 
             <button id="redefinir" disabled='' style="width: 47%;" type="submit"
-              class="btn btn-info btn-md float-right">Redefinir</button>
+              class="btn btn-secondary btn-md float-right">Redefinir</button>
 
           </div>
           
@@ -153,18 +154,17 @@
 
           <p class="relogio text-center mb-4">00:00:00</p><br />
 
-          <div class="d-block mt-4">
+          <div class="d-block mt-1">
 
-            <form class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
 
-              <button type="button" class="iniciar btn btn-success btn-md d-flex m-1">INICIAR</button>
+              <a id="iniciar" class="iniciar pt-2 mt-2 mx-3"><i id="iniciado" class="play fas fa-play-circle fa-3x"></i></a> 
 
-              <button type="button" class="pausar btn btn-warning btn-md d-flex m-1"
-                style="color: white;">PAUSAR</button>
+              <a id="pausar" class="pausar pt-2 mt-2 mx-3"><i id="pausado" class="pause fas fa-pause-circle fa-3x"></i></a>
 
-              <button type="submit" class="zerar btn btn-danger btn-md d-flex m-1">ZERAR</button>
+              <a id="zerar" class="zerar pt-2 mt-2 mx-3"><i id="zerado" class="redo fas fa-redo fa-3x"></i></i></a>
 
-            </form>
+            </div>
 
           </div>
 
@@ -175,6 +175,79 @@
       <div style="clear:both;"></div>
 
     </section> <!-- Fim da Seção POMODORO -->
+
+    <hr>
+    <hr>
+    <!-- Início da Seção TAREFAS -->
+    <section class="row d-block">
+
+      <aside class="col-sm-12">
+
+        <div class="pl-5">
+
+          <h3 class="text-center"><strong>Tarefas</strong></h3>
+  
+          <form class="form-inline justify-content-center">
+
+            <div class="form-group mb-0">
+
+                <div class="input-group mr-2">
+
+                  <div class="input-group-prepend"><span class="input-group-text">Tarefa:</span></div>
+
+                  <input  class="input-tarefa form-control px-1" type="text" placeholder="Digite aqui">
+
+                </div>
+
+                <div class="input-group d-flex" style="margin-left: auto; margin-right: auto;">
+
+                  <a id="plus" class="iconPlus d-block"><i class="addPlus fas fa-plus-circle fa-lg"></i></a>
+
+                </div>
+
+            </div>
+
+          </form>
+
+          <button id="erase-concluded" style="height: 38px;" type="button" class="btn btn-danger btn-sm d-block float-right">Apagar Concluídas</button>
+    
+          <h2 class="d-block" style="color: #a3a389;"><i>Listas</i></h2>
+    
+          <hr class="mt-2 d-block">
+
+        </div>
+
+      </aside>
+      
+    </section>
+
+    <section class="row d-flex">
+
+      <aside class="col-sm-6 d-block float-left">
+
+        <div><h5 class="text-center">Para fazer</h5></div>
+
+        <ul class="tarefas-fazer list-group-flush">
+
+          <!--<li id="inutil"><a class="check"></a></li>-->
+
+        </ul>
+
+      </aside>
+
+      <aside class="col-sm-6 d-block float-right">
+
+        <div><h5 class="text-center">Concluídas</h5></div>
+
+        <ul class="tarefas-feitas list-group-flush">
+
+          
+
+        </ul>
+
+      </aside>
+      
+    </section>
 
   </main> <!-- Fim do Conteúdo -->
 
