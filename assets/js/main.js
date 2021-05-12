@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////////////////////////////////// MAIN JavaScript ///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////// MAIN JavaScript (POMODORO + LISTA DE TAREFAS) /////////////////////////////////////////////////////////////////////////
 
-// IIFS
+// IIFS (IMMEDIATELY INVOKED FUNCTION EXPRESSION)
 (function() {
 
   ///////////////////////////////////////////////////////////////////////////// INÍCIO DA LÓGICA POMODORO /////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@
     const som = document.getElementById('som')
 
 
-    // Funções
+    // FUNÇÕES
 
     // Função que verifica se já existem dados de tempo no storage do navegador no carregamento da página
     $(document).ready(function() {
@@ -94,11 +94,25 @@
     btnRedefinir.mousedown(function() {
       sessionStorage.clear()
       setTimeout(function() {
+        pausado.classList.add('pause')
+        pausado.classList.remove('pauseRed')
+        iniciado.classList.remove('playGreen')
+        iniciado.classList.add('play')
         clearInterval(timer)
         clearInterval(timerBarra)
         relogio.innerHTML = '00:00:00'
         relogio.classList.remove('pausado')
-        segundos = input1;
+        segundos = input1
+        $('em').html(`Large Cycle`)
+        $('#tomates').html(`
+        <ul class="d-flex">
+          <img style="margin-left: auto; margin-right: auto;" id="c1" src="./assets/media/tomate-vazio.png" title="Small Cycle 1">
+          <img style="margin-left: auto; margin-right: auto;" id="c2" src="./assets/media/tomate-vazio.png" title="Small Cycle 2"> 
+        </ul>
+        <ul class="d-flex mb-0">
+          <img style="margin-left: auto; margin-right: auto;" id="c4" src="./assets/media/tomate-vazio.png" title="Small Cycle 4">
+          <img style="margin-left: auto; margin-right: auto;" id="c3" src="./assets/media/tomate-vazio.png" title="Small Cycle 3"> 
+        </ul>`)
         cycle = 0
         cicloFoco = 0
         cicloPausa = 0 
@@ -261,8 +275,36 @@
               <img style="margin-left: auto; margin-right: auto;" id="c4" src="./assets/media/tomate-vazio.png" title="Small Cycle 4">
               <img style="margin-left: auto; margin-right: auto;" id="c3" src="./assets/media/tomate-vazio.png" title="Small Cycle 3"> 
               </ul>`)
+              $('#som').attr('src', './assets/media/alerta-pomodoro.mp3')
             }, 500)
-            setTimeout(function () { $('.zerar').trigger('click') }, 100)
+            setTimeout(function () { 
+              pausado.classList.add('pause')
+              pausado.classList.remove('pauseRed')
+              iniciado.classList.remove('playGreen')
+              iniciado.classList.add('play')
+              clearInterval(timer)
+              clearInterval(timerBarra)
+              relogio.innerHTML = '00:00:00';
+              relogio.classList.remove('pausado');
+              segundos = input1
+              $('em').html(`Large Cycle`)
+              $('#tomates').html(`<ul class="d-flex">
+              <img style="margin-left: auto; margin-right: auto;" id="c1" src="./assets/media/tomate-vazio.png" title="Small Cycle 1">
+              <img style="margin-left: auto; margin-right: auto;" id="c2" src="./assets/media/tomate-vazio.png" title="Small Cycle 2"> 
+              </ul>
+              <ul class="d-flex mb-0">
+              <img style="margin-left: auto; margin-right: auto;" id="c4" src="./assets/media/tomate-vazio.png" title="Small Cycle 4">
+              <img style="margin-left: auto; margin-right: auto;" id="c3" src="./assets/media/tomate-vazio.png" title="Small Cycle 3"> 
+              </ul>`)
+              cycle = 0
+              cicloFoco = 0
+              cicloPausa = 0 
+              cicloDescanso = 0 
+              barra = 0
+              segundosBarra = 0
+              $('#barra').attr('style', `width: ${barra}%`)
+              $('#barra').html(`${barra}%`)
+            }, 100)
           })
           cycle = 0
           cicloFoco = 0
@@ -319,6 +361,8 @@
     // Eventos
 
     // Captura de cliques do cronometro
+
+    // START
     $('.iniciar').click(function(e) {
       e.preventDefault()
       iniciar.classList.add('loadFrames')
@@ -336,6 +380,8 @@
         }, 1100)
     })
     
+
+    //PAUSE
     $('.pausar').click(function(e) {
       e.preventDefault()
       pausar.classList.add('loadFrames')
@@ -351,6 +397,7 @@
       }, 1100)
     })
 
+    // RETORNAR
     $('.zerar').click(function(e) {
       e.preventDefault()
       zerar.classList.add('load')
@@ -395,13 +442,31 @@
   ////////////////////////////////////////////////////////////////////////////// INÍCIO DA LÓGICA TAREFAS //////////////////////////////////////////////////////////////////////////////////////
   function listaTarefas() {
 
-    // Constantes
+    // Constantes e variáveis
     const inputTarefa = document.querySelector('.input-tarefa')
     const iconPlus = document.querySelector('.iconPlus')
     const tarefasFazer = document.querySelector('.tarefas-fazer')
     const tarefasFeitas = document.querySelector('.tarefas-feitas')
 
-    // Função de captura do clique no ícone adicionar(Plus)
+
+    //FUNÇÕES
+
+    // Função de execução para cliques logo depois que a página for carregada, se necessário
+    function ready() {
+      let btnApagarTrf = document.querySelectorAll('.close')
+      for(let i = 0; i < btnApagarTrf.length; i++) {
+        let btnApagar = btnApagarTrf[i]
+        btnApagar.click(removeTarefa) 
+      }
+      let btnCheckTrf = document.getElementsByClassName('done1')
+      for(let i = 0; i < btnCheckTrf.length; i++) {
+        let btnCheck = btnCheckTrf[i]
+        btnCheck.click(finalizaTarefa) 
+      }
+    }
+    ready()
+
+    // Função de captura do clique no ícone adicionar(Plus) para adicionar tarefa
     $('.iconPlus').click(function(e) {
       e.preventDefault()
       if (!inputTarefa.value) return
@@ -412,49 +477,80 @@
       }, 1100) 
     })
 
-    // Função de captura do pressionar na tecla enter no input
+    // Função de captura do pressionar na tecla enter no input para adicionar tarefa
     inputTarefa.addEventListener('keypress', function(e) {
       if (e.keyCode === 13) {
         e.preventDefault()
-        if (!inputTarefa.value) return
+        if (!inputTarefa.value)
+         return
+        plus.classList.add('load')
         criaTarefa(inputTarefa.value)
+        setTimeout(function(){
+          plus.classList.remove('load')
+        }, 1100)
       }
     })
 
-    // Função de verificação de conteúdo no input de tarefa
+    // Função de verificação de conteúdo no input de tarefa 'Proibido Valor Vazio'
     function limpaInput() {
       inputTarefa.value = ''
       inputTarefa.focus()
     }
 
-    // Função de criação do item de lista de tarefas à fazer
-    function criaLi() {
-      const li = document.createElement('li')
-      setTimeout(function() {
-        li.setAttribute('class', `fazer list-group-item  d-block`)
-      }, 100) 
-      return li
+    // Função de captura do evento de clique do botão apagar de cada tarefa
+    function removeTarefa(e) {
+        e.preventDefault()
+        let btnApagarClicado = e.target
+        btnApagarClicado.parentElement.parentElement.remove()
+        salvarTarefas()
+    }
+
+    // Função de captura do evento de clique do botão check de cada tarefa
+    function finalizaTarefa(e) {
+        e.preventDefault()
+        let btnCheckClicado = e.target
+        const tarefaParent = btnCheckClicado.parentElement.parentElement.innerText
+        setTimeout(function(){ 
+          btnCheckClicado.parentElement.parentElement.remove()
+          salvarTarefas()
+        }, 2100)
+        criaTarefaFeita(tarefaParent)
     }
 
     // Função de criação das tarefas à fazer
     function criaTarefa(textoInput) {
-      const li = criaLi()
-      li.innerHTML = (`<span class="titulo-tarefa">${textoInput}</span>`)
+      const li = document.createElement('li')
+      $(li).attr('class', `fazer list-group-item d-block`)
+      let nomeTarefas = tarefasFazer.getElementsByClassName('titulo-tarefa-fazer')
+      for (let i = 0; i < nomeTarefas.length; i++) {
+        if(nomeTarefas[i].innerText == textoInput) {
+          // Pensando em trocar o alert por um modal
+          alert('Essa tarefa ja existe')
+          return
+        }
+      }
+      li.innerHTML = (`
+        <span class="titulo-tarefa-fazer">${textoInput}</span>
+        <a class="check ml-2 mt-2">
+          <i class="done1 far fa-check-square fa-sm mt-1 pt-1 mx-3 float-right" aria-hidden="true"></i>
+        </a>
+        <a class="apagar ml-2 mt-2 d-flex float-right">
+          <i class="close fas fa-times-circle fa-sm mx-2 d-flex float-right" aria-hidden="true"></i>
+        </a>`)
       tarefasFazer.appendChild(li)
       limpaInput()
-      criaBotaoCheck(li)
-      criaBotaoApagar(li)
+      li.getElementsByClassName('apagar')[0].addEventListener('click', removeTarefa)
+      li.getElementsByClassName('done1')[0].addEventListener('click', finalizaTarefa)
       salvarTarefas()
     }
 
     // Função de salvamento e conversão do array de tarefas à fazer no storage do navegador
     function salvarTarefas() {
-      const liTarefas = tarefasFazer.querySelectorAll('li')
+      const liTarefas = tarefasFazer.getElementsByClassName('titulo-tarefa-fazer')
       const listaDeTarefas = []
 
       for (let tarefa of liTarefas) {
         let tarefaTexto = tarefa.innerText
-        tarefaTexto = tarefaTexto.replace('Apagar', '').trim()
         listaDeTarefas.push(tarefaTexto)
       }
 
@@ -473,59 +569,20 @@
     }
     adicionaTarefasSalvas();
 
-    // Função de criação do botão apagar de cada tarefa 
-    function criaBotaoApagar(li) {
-      const botaoApagar = document.createElement('a')
-      botaoApagar.setAttribute('class', 'apagar ml-2 mt-2 d-flex float-right');
-      setTimeout(function(){ 
-        $('.apagar').html(`<i id="fechado" class="close fas fa-times-circle fa-sm mx-2 d-flex float-right"></i>`)
-      }, 100) 
-      li.appendChild(botaoApagar)
-      $('.apagar').click(function(e) {
-        e.preventDefault()
-        $(this).parent().remove()
-        salvarTarefas()
-      })
-    }
-
-    // Função de criação do botão check de cada tarefa à fazer
-    function criaBotaoCheck(li) {
-      const botaoCheck = document.createElement('a')
-      botaoCheck.setAttribute('class', 'check ml-2 mt-2')
-      setTimeout(function(){ 
-        $('.check').html(`<i class="done1 far fa-check-square fa-sm mt-1 pt-1 mx-3 float-right"></i>`)
-      }, 100) 
-      li.appendChild(botaoCheck)
-      $('.check').mousedown(function(e) {
-        e.preventDefault()
-        const tarefa = e.target
-        const tarefaParent = $(this).prev().eq(0).first(0)
-        const titulo = tarefaParent.html()
-        setTimeout(function(){ 
-          $(tarefaParent).parent().remove()
-        }, 2100)
-        console.log(titulo)
-        
-        criaTarefaFeita(titulo)
-      })
-    } 
-
-    // Função de criação do item de lista de tarefas concluídas
-    function criaLiFeita() {
-      const li = document.createElement('li')
-      setTimeout(function() {
-        li.setAttribute('class', `feita list-group-item  d-block`)
-      }, 100) 
-      return li
-    }
-
     // Função de criação das tarefas concluídas
     function criaTarefaFeita(textoInput) {
-      const li = criaLiFeita()
-      li.innerHTML = (`<span class="titulo-tarefa float-left mr-3x">${textoInput}</span>`)
-      $(tarefasFeitas).append(li)
-      criaBotaoCheckFeitas(li)
-      criaBotaoApagar(li)
+      const li = document.createElement('li')
+      $(li).attr('class', `feita list-group-item d-block`)
+      li.innerHTML = (`
+        ${textoInput}
+        <a class="check-feitas ml-2 mt-2">
+          <i class="done2 fas fa-check-square fa-sm mt-1 pt-1 mx-3 float-right" aria-hidden="true"></i>
+        </a>
+        <a class="apagar ml-2 mt-2 d-flex float-right">
+          <i class="close fas fa-times-circle fa-sm mx-2 d-flex float-right" aria-hidden="true"></i>
+        </a>`)
+      $(tarefasFeitas).prepend(li)
+      li.getElementsByClassName('apagar')[0].addEventListener('click', removeTarefa)
     }
 
     // Função de criação do botão para apagas todas as tarefas concluídas
@@ -535,21 +592,7 @@
         salvarTarefas()
         //localStorage.clear()
     	})
- 	 })
-
-    // Função de criação do botão check das tarefas concluídas
-    function criaBotaoCheckFeitas(li) {
-      const botaoCheck = document.createElement('a');
-      botaoCheck.setAttribute('class', 'check-feitas ml-2 mt-2');
-      setTimeout(function() { 
-        $('.check-feitas').html(`<i class="done2 fas fa-check-square fa-sm mt-1 pt-1 mx-3 float-right"></i>`)
-      }, 100) 
-      li.appendChild(botaoCheck)
-      $('.check-feitas').click(function(e) {
-        e.preventDefault()
-      })
-    }
-  }
+ 	  })
+  } 
   listaTarefas()
-
 }());
